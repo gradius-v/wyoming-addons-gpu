@@ -11,6 +11,7 @@ RUN \
         python3 \
         python3-dev \
         python3-pip \
+        git \
     \
     && pip3 install --no-cache-dir -U \
         setuptools \
@@ -21,6 +22,7 @@ RUN \
     && apt-get purge -y --auto-remove \
         build-essential \
         python3-dev \
+        git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
