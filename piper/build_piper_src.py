@@ -42,6 +42,7 @@ if __name__ == "__main__":
             f"cd {tempdir}",
             "cmake -Bbuild -DCMAKE_INSTALL_PREFIX=install",  # prepare it
             "cmake --build build --config Release",  # build it
+            f"tree {tempdir}"  # show it fr debugging
         ]
         clean_cmd = [f"cd {tempdir}", "rm -rf build install dist"]
         test_make_cmd = [
