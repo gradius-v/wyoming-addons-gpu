@@ -13,14 +13,14 @@ ENV PIPER_OS="${PIPER_OS}" \
 
 # Build Piper
 WORKDIR /tmp
-COPY ./piper/build_piper_src.py /tmp/build.py
+COPY ./build_piper_src.py /tmp/build.py
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
         python3 \
         python3-pip \
-        git \
+        git tree \
         \
         build-essential \
         python3-dev \
@@ -34,7 +34,8 @@ RUN \
     \
     && rm -rf /var/lib/apt/lists/*
 
-from nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04 as final_img
+# Build final image
+from nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04 as runtime
 
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -48,17 +49,16 @@ ENV PIPER_OS="${PIPER_OS}" \
     TARGETVARIANT="${TARGETVARIANT}" \
     BUILD_PIPER="${BUILD_PIPER}"
 
-COPY --from=builder /tmp/piper /usr/src/piper
+COPY --from=builder /tmp/piper /usr/share/piper
 
 WORKDIR /
-COPY run-gpu.sh /
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
         python3 \
         python3-pip \
-        tree nano \
+        tree \
     \
     && pip3 install --no-cache-dir -U \
         setuptools \
@@ -68,6 +68,7 @@ RUN \
         "${PIPER_LIB_SRC}" \
     && rm -rf /var/lib/apt/lists/*
 
+COPY ./run-gpu.sh /
 
 EXPOSE 10200
 

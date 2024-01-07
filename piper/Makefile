@@ -1,4 +1,4 @@
-.PHONY: local run update
+.PHONY: local run update gpu local-gpu run-gpu update-gpu
 
 VERSION := 1.4.0
 TAG := rhasspy/wyoming-piper
@@ -9,14 +9,23 @@ HOST := 0.0.0.0
 PORT := 10200
 
 all:
-	docker buildx build . --platform "$(PLATFORMS)" --tag "$(TAG):$(VERSION)" --push
+	docker buildx build . --platform "$(PLATFORMS)" --tag "$(TAG):$(VERSION)" --push -f .NONGPU.Dockerfile
+gpu:
+	docker buildx build . --platform "$(PLATFORMS)" --tag "$(TAG):$(VERSION)-gpu" --push -f .GPU.Dockerfile
 
 update:
-	docker buildx build . --platform "$(PLATFORMS)" --tag "$(TAG):latest" --push
+	docker buildx build . --platform "$(PLATFORMS)" --tag "$(TAG):latest" --push -f .NONGPU.Dockerfile
+update-gpu:
+	docker buildx build . --platform "$(PLATFORMS)" --tag "$(TAG):latest-gpu" --push -f .GPU.Dockerfile
 
 local:
-	docker build . -t "$(TAG):$(VERSION)" --build-arg TARGETARCH=amd64
+	docker build . -t "$(TAG):$(VERSION)" -f .NONGPU.Dockerfile --build-arg TARGETARCH=amd64
+local-gpu:
+	docker build . -t "$(TAG):$(VERSION)" -f .GPU.Dockerfile --build-arg TARGETARCH=amd64
 
 run:
 	mkdir -p "$(DATA_DIR)"
 	docker run -it -p '$(PORT):$(PORT)' -v "$(DATA_DIR):/data"  "$(TAG):$(VERSION)" --voice "$(VOICE)" --uri 'tcp://$(HOST):$(PORT)' --debug
+run-gpu:
+	mkdir -p "$(DATA_DIR)"
+	docker run -it --gpus all -p '$(PORT):$(PORT)' -v "$(DATA_DIR):/data"  "$(TAG):$(VERSION)" --voice "$(VOICE)" --uri 'tcp://$(HOST):$(PORT)' --cuda --debug

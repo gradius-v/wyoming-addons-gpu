@@ -48,9 +48,10 @@ if __name__ == "__main__":
             f"cd {tempdir}/build",  # test it
             "ctest --config Release",
         ]
+        # install it into CMAKE_INSTALL_PREFIX location
         install_make_cmd = [
             f"cd {tempdir}",
-            "cmake --install build"  # install it
+            "cmake --install build"
         ]
         # download piper-phonemize and extract to lib/Linux-$(uname -m)/piper_phonemize
         phonemize_cmd = [
@@ -71,21 +72,17 @@ if __name__ == "__main__":
         subprocess.check_call(test_make_cmd, shell=True)
         # install piper into ./install
         subprocess.check_call(install_make_cmd, shell=True)
-        # create /usr/share/piper and move the ./install/* contents into it
-        install_cmd = [
-            f"mkdir /usr/share/piper",
-            # -r for recursive
-            f"cp -r {tempdir}/install/* /usr/share/piper/"
-        ]
-        subprocess.check_call(install_cmd, shell=True)
+
         # copy piper to /tmp/piper for install into runtime image
         extra_cmd = [
+            "mkdir -p /tmp/piper",
             f"cp -r {tempdir}/install/* /tmp/piper/"
         ]
         subprocess.check_call(extra_cmd, shell=True)
 
     # Install piper from a release
     else:
+        print(f"Installing piper from release {PIPER_RELEASE}")
         cmd = ""
         if PIPER_RELEASE is None:
             print(f"PIPER_RELEASE is not set, using default value: {D_REL}")
@@ -107,14 +104,16 @@ if __name__ == "__main__":
                 "'curl -L -s"
                 f"https://github.com/rhasspy/piper/releases/download/"
                 f"{PIPER_RELEASE}/piper_{TARGETARCH}{TARGETVARIANT}.tar.gz "
-                "| tar -zxvf - -C /usr/share'"
+                "| tar -zxvf - -C /tmp'"
             )
         elif PIPER_RELEASE in FMT2_RELEASES:
             cmd = (
                 "'curl -L -s "
                 f"https://github.com/rhasspy/piper/releases/download/"
                 f"{PIPER_RELEASE}/piper_{PIPER_OS}_{UNAME_M}{EXT}"
-                "| tar -zxvf - -C /usr/share'"
+                "| tar -zxvf - -C /tmp'"
             )
+        # should put it in/tmp/piper
         subprocess.check_call([cmd], shell=True, stdout=subprocess.PIPE)
-
+    tree_cmd = ["tree /tmp"]
+    subprocess.check_call(tree_cmd, shell=True)

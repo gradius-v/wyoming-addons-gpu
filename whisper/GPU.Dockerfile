@@ -1,8 +1,9 @@
 FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
+ARG INSTALL_WHISPER_SRC="git+https://github.com/baudneo/wyoming-faster-whisper.git@hf_asr_models"
+
 # Install Whisper
 WORKDIR /usr/src
-ARG INSTALL_WHISPER_COMMAND="git+https://github.com/baudneo/wyoming-faster-whisper.git@hf_asr_models"
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -15,7 +16,7 @@ RUN \
         setuptools \
         wheel \
     && pip3 install --no-cache-dir \
-        "${INSTALL_WHISPER_COMMAND}" \
+        "${INSTALL_WHISPER_SRC}" \
     \
     && apt-get purge -y --auto-remove \
         build-essential \
