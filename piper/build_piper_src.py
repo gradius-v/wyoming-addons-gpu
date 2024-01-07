@@ -13,16 +13,16 @@ if __name__ == "__main__":
     TARGETVARIANT = ENV.get("TARGETVARIANT")
     D_REL = "2023.11.14-2"
     D_OS = "linux"
-    FMT1_RELEASES = (
+    FMT1_RELEASES = [
         "v0.0.2",
         "v1.0.0",
         "v1.1.0",
         "v1.2.0",
-    )
-    FMT2_RELEASES = "2023.11.14-2"
+    ]
+    FMT2_RELEASES = ["2023.11.14-2"]
     UNAME_M = os.uname().machine
 
-    ALL_RELEASES = FMT1_RELEASES + FMT2_RELEASES
+    ALL_RELEASES = FMT1_RELEASES.extend(FMT2_RELEASES)
     OS_CHOICES = ("linux", "windows", "macos")
     EXT = ".zip" if PIPER_OS.casefold() == "windows" else ".tar.gz"
 
