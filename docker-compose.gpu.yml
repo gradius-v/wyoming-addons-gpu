@@ -1,6 +1,7 @@
 version: '3'
 services:
   wyoming-piper:
+    container_name: wyoming-piper-gpu
     extends:
       file: docker-compose.base.yml
       service: wyoming-piper
@@ -19,6 +20,7 @@ services:
               capabilities: [gpu]
 
   wyoming-whisper:
+    container_name: wyoming-whisper-gpu
     extends:
       file: docker-compose.base.yml
       service: wyoming-whisper
@@ -34,6 +36,7 @@ services:
     command: [ "--model", "tiny-int8", "--language", "en", "--device", "cuda" ]
 
   wyoming-openwakeword:
+    container_name: wyoming-openwakeword-gpu
     extends:
       file: docker-compose.base.yml
       service: wyoming-openwakeword
