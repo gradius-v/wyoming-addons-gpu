@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 as builder
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04 as builder
 ARG TARGETARCH
 ARG TARGETVARIANT
 ARG PIPER_OS='linux'
@@ -27,7 +27,7 @@ RUN python3 /tmp/build.py
 
 
 # Build final image
-from nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04 as runtime
+from nvidia/cuda:11.8.0-runtime-ubuntu22.04 as final
 
 ARG TARGETARCH
 ARG TARGETVARIANT
