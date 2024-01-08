@@ -1,15 +1,6 @@
 FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 as builder
 ARG TARGETARCH
 ARG TARGETVARIANT
-ARG PIPER_LIB_SRC='git+https://github.com/baudneo/wyoming-piper@use_cuda'
-ARG PIPER_OS='linux'
-ARG BUILD_PIPER='yes'
-
-ENV PIPER_OS="${PIPER_OS}" \
-    PIPER_RELEASE="${PIPER_RELEASE}" \
-    TARGETARCH="${TARGETARCH}" \
-    TARGETVARIANT="${TARGETVARIANT}" \
-    BUILD_PIPER="${BUILD_PIPER}"
 
 # Build Piper
 WORKDIR /tmp
@@ -20,7 +11,7 @@ RUN \
         curl \
         python3 \
         python3-pip \
-        git tree \
+        git tree cmake \
         \
         build-essential \
         python3-dev \
@@ -28,44 +19,43 @@ RUN \
     && pip3 install --no-cache-dir -U \
         setuptools \
         wheel \
-        onnxruntime-gpu \
-    \
-    && python3 /tmp/build.py \
-    \
-    && rm -rf /var/lib/apt/lists/*
+        onnxruntime-gpu
+
+RUN python3 /tmp/build.py
+
 
 # Build final image
 from nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04 as runtime
 
 ARG TARGETARCH
 ARG TARGETVARIANT
-ARG PIPER_LIB_SRC
-ARG PIPER_OS
-ARG BUILD_PIPER
-
-ENV PIPER_OS="${PIPER_OS}" \
-    PIPER_RELEASE="${PIPER_RELEASE}" \
-    TARGETARCH="${TARGETARCH}" \
-    TARGETVARIANT="${TARGETVARIANT}" \
-    BUILD_PIPER="${BUILD_PIPER}"
+ARG PIPER_LIB_SRC='git+https://github.com/baudneo/wyoming-piper@usa_cuda'
+ARG PIPER_OS='linux'
+ARG BUILD_PIPER='yes'
 
 COPY --from=builder /tmp/piper /usr/share/piper
 
 WORKDIR /
 RUN \
-    apt-get update \
+    env \
+    \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
         python3 \
         python3-pip \
-        tree \
+        git \
     \
     && pip3 install --no-cache-dir -U \
         setuptools \
         wheel \
         onnxruntime-gpu \
+    \
     && pip3 install --no-cache-dir \
         "${PIPER_LIB_SRC}" \
+    \
+    && apt-get purge -y --auto-remove \
+        git \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./run-gpu.sh /
