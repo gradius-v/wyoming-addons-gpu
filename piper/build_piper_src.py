@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
         # clone piper source to tempdir
         git_clone_cmd = f"git clone {PIPER_SRC_GIT} {tempdir}"
-        # grab piper-phonemize and extract to <repo src>/lib/Linux-$(uname -m)/piper_phonemize
+        # grab piper-phonemize and extract to <repo src>/lib/Linux-$(uname -m)
         phonemize_cmd = f"mkdir -p {PHONEMIZE_DEST} && " \
                         f"curl -L -s 'https://github.com/rhasspy/piper-phonemize/releases/download/" \
                         f"{PHONEMIZE_VER}/piper-phonemize_{PIPER_OS}_{UNAME_M}{EXT}' " \

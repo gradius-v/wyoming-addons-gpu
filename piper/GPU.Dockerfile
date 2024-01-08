@@ -1,6 +1,8 @@
 FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 as builder
 ARG TARGETARCH
 ARG TARGETVARIANT
+ARG PIPER_OS='linux'
+ARG BUILD_PIPER='yes'
 
 # Build Piper
 WORKDIR /tmp
@@ -31,7 +33,6 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 ARG PIPER_LIB_SRC='git+https://github.com/baudneo/wyoming-piper@usa_cuda'
 ARG PIPER_OS='linux'
-ARG BUILD_PIPER='yes'
 
 COPY --from=builder /tmp/piper /usr/share/piper
 
