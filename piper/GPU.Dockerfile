@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04 as builder
+FROM nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04 as builder
 ARG TARGETARCH
 ARG TARGETVARIANT
 ARG PIPER_OS='linux'
