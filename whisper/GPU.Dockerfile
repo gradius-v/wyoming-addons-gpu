@@ -1,7 +1,7 @@
-FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04
 
-#ARG INSTALL_WHISPER_SRC="git+https://github.com/baudneo/wyoming-faster-whisper.git@hf_asr_models"
-ARG INSTALL_WHISPER_SRC="git+https://github.com/rhasspy/wyoming-faster-whisper"
+ARG INSTALL_WHISPER_SRC="git+https://github.com/baudneo/wyoming-faster-whisper.git@hf_asr_models"
+#ARG INSTALL_WHISPER_SRC="git+https://github.com/rhasspy/wyoming-faster-whisper"
 # Install Whisper
 WORKDIR /usr/src
 RUN \
