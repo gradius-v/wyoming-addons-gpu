@@ -1,0 +1,16 @@
+version: '3'
+services:
+  wyoming-openwakeword:
+    container_name: wyoming-openwakeword-gpu
+    extends:
+      file: docker-compose.base.openwakeword.yml
+      service: wyoming-openwakeword
+    build:
+      dockerfile: GPU.Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
