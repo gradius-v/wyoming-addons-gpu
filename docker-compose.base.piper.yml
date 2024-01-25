@@ -1,0 +1,13 @@
+version: '3'
+services:
+  wyoming-piper:
+    build:
+      context: ./piper/
+      dockerfile: NONGPU.Dockerfile
+    ports:
+      - "10200:10200"
+    volumes:
+      - ./piper-data:/data
+    command: [ "--voice", "en_US-amy-medium" ]
+    restart: unless-stopped
+
