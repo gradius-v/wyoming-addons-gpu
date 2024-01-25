@@ -1,0 +1,12 @@
+version: '3'
+services:
+  wyoming-openwakeword:
+    build:
+      context: ./openwakeword/
+      dockerfile: NONGPU.Dockerfile
+    ports:
+      - "10400:10400"
+    volumes:
+      - ./openwakeword-data:/data
+    command: [ "--preload-model", "ok_nabu" ]
+    restart: unless-stopped
