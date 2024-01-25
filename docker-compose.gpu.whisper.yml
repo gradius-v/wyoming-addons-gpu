@@ -14,4 +14,4 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    command: [ "--model", "medium-int8", "--language", "en", "--device", "cuda" ]
+    command: [ "--model", "medium-int8", "--language", "auto", "--device", "cuda" ]
