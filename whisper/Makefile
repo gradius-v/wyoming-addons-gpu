@@ -5,7 +5,7 @@ TAG := rhasspy/wyoming-whisper
 PLATFORMS := linux/amd64,linux/arm64,linux/armv7
 DATA_DIR := ${HOME}/.local/share/wyoming/whisper
 MODEL := medium-int8
-MODEL_LANG := en
+MODEL_LANG := auto
 HOST := 0.0.0.0
 PORT := 10300
 
