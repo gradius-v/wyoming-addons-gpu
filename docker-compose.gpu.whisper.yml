@@ -1,0 +1,17 @@
+version: '3'
+services:
+  wyoming-whisper:
+    container_name: wyoming-whisper-gpu
+    extends:
+      file: docker-compose.base.whisper.yml
+      service: wyoming-whisper
+    build:
+      dockerfile: GPU.Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: [ "--model", "medium-int8", "--language", "en", "--device", "cuda" ]
