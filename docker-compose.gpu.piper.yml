@@ -1,0 +1,17 @@
+version: '3'
+services:
+  wyoming-piper:
+    container_name: wyoming-piper-gpu
+    extends:
+      file: docker-compose.base.piper.yml
+      service: wyoming-piper
+    build:
+      dockerfile: GPU.Dockerfile
+      context: ./piper
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
